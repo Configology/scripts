@@ -45,6 +45,8 @@ fi
 log "Installing Fail2Ban..."
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -y
+# Remove man-db to avoid install hangs (not needed on servers)
+apt-get purge -y man-db || true
 apt-get install -y fail2ban
 
 # ---- Configure jail.d override ----
