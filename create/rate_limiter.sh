@@ -43,11 +43,17 @@ fi
 
 # ---- Install fail2ban ----
 log "Installing Fail2Ban..."
+
+# Non-interactive + suppress needrestart triggers to avoid hangs
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 export NEEDRESTART_SUSPEND=1
+
+# Optional: completely disable needrestart during install
+systemctl mask needrestart.service needrestart.timer || true
+
 apt-get update -y
-apt-get install -y fail2ban
+apt-get install -y --no-install-recommends fail2ban
 
 # ---- Configure jail.d override ----
 JAIL_D="/etc/fail2ban/jail.d"
@@ -73,6 +79,9 @@ systemctl enable --now fail2ban
 if systemctl is-active --quiet fail2ban; then
 	systemctl reload fail2ban || systemctl restart fail2ban
 fi
+
+# Optional: unmask needrestart after installation
+systemctl unmask needrestart.service needrestart.timer || true
 
 # ---- Status and validation ----
 log "Fail2Ban overall status:"
