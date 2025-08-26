@@ -44,9 +44,9 @@ fi
 # ---- Install fail2ban ----
 log "Installing Fail2Ban..."
 export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+export NEEDRESTART_SUSPEND=1
 apt-get update -y
-# Remove man-db to avoid install hangs (not needed on servers)
-apt-get purge -y man-db || true
 apt-get install -y fail2ban
 
 # ---- Configure jail.d override ----
